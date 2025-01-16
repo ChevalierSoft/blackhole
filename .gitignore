@@ -1,3 +1,7 @@
 *.log
 conf.yaml
 conf.json
+*.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
