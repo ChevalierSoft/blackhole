@@ -45,6 +45,7 @@ func main() {
 		logger.WithContext(c.Request.Context()).Info().Bytes("body", body).Msg("request body")
 		c.JSON(204, gin.H{})
 	})
+	logger.Get().Printf("%#v\n", conf)
 	setCertMagic(conf)
 	err := certmagic.HTTPS([]string{conf.DomainName}, r.Handler())
 	logger.Get().Fatal().Err(err).Msg("server closed")
