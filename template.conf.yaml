@@ -3,3 +3,4 @@
 
 port: 42024
 domain_name: "my_domain.oui"
+email: "my_email@it.oui"

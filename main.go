@@ -9,18 +9,15 @@ import (
 	"github.com/jinzhu/configor"
 )
 
-var (
-	PORT int
-)
-
 type Conf struct {
-	Port       int      `required:"true" env:"PORT"        yaml:"port"        json:"port"`
-	DomainName []string `required:"true" env:"DOMAIN_NAME" yaml:"domain_name" json:"domain_name"`
+	Port       int    `required:"true" env:"PORT"        yaml:"port"        json:"port"`
+	DomainName string `required:"true" env:"DOMAIN_NAME" yaml:"domain_name" json:"domain_name"`
+	Email      string `required:"true" env:"EMAIL"       yaml:"email"       json:"email"`
 }
 
 func loadConf() *Conf {
 	conf := Conf{}
-	err := configor.Load(&conf, "config.yml")
+	err := configor.Load(&conf, "conf.yaml")
 	if err != nil {
 		logger.Get().Fatal().Err(err).Msg("Cannot load conf")
 	}
@@ -28,7 +25,6 @@ func loadConf() *Conf {
 }
 
 func main() {
-
 	conf := loadConf()
 	r := gin.New()
 	r.Use(
@@ -39,13 +35,24 @@ func main() {
 	r.Any("/*any", func(c *gin.Context) {
 		body, err := c.GetRawData()
 		if err != nil {
+			logger.WithContext(c.Request.Context()).
+				Error().
+				Err(err).
+				Msg("error while getting raw body")
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 		logger.WithContext(c.Request.Context()).Info().Bytes("body", body).Msg("request body")
 		c.JSON(204, gin.H{})
 	})
-	certmagic.HTTPSPort = conf.Port
-	err := certmagic.HTTPS(conf.DomainName, r.Handler())
+	setCertMagic(conf)
+	err := certmagic.HTTPS([]string{conf.DomainName}, r.Handler())
 	logger.Get().Fatal().Err(err).Msg("server closed")
+}
+
+func setCertMagic(conf *Conf) {
+	certmagic.HTTPSPort = conf.Port
+	certmagic.DefaultACME.Email = conf.Email
+	certmagic.DefaultACME.CA = certmagic.LetsEncryptStagingCA
+	certmagic.DefaultACME.Agreed = true
 }
