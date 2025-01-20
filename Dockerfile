@@ -9,6 +9,6 @@ COPY --from=builder /go/bin/app /bin/app
 COPY *.yaml /bin/
 ENTRYPOINT ["/bin/app"]
 
-ENV PORT=443
-ENV DOMAIN_NAME=???
-ENV EMAIL="my_email@it.oui"
+# ENV BH_PORT=443
+# ENV BH_DOMAIN_NAME=???
+# ENV BH_EMAIL="my_email@it.oui"
