@@ -9,23 +9,28 @@ import (
 	"github.com/jinzhu/configor"
 )
 
-type Conf struct {
-	Port       int    `required:"true" env:"PORT"        yaml:"port"        json:"port"`
-	DomainName string `required:"true" env:"DOMAIN_NAME" yaml:"domain_name" json:"domain_name"`
-	Email      string `required:"true" env:"EMAIL"       yaml:"email"       json:"email"`
+type Config struct {
+	Port       int    `required:"true" env:"BH_PORT"        yaml:"port"        json:"port"`
+	DomainName string `required:"true" env:"BH_DOMAIN_NAME" yaml:"domain_name" json:"domain_name"`
+	Email      string `required:"true" env:"BH_EMAIL"       yaml:"email"       json:"email"`
 }
 
-func loadConf() *Conf {
-	conf := Conf{}
-	err := configor.Load(&conf, "conf.yaml")
+func loadConf() *Config {
+	cfg := Config{}
+	err := configor.
+		New(&configor.Config{}).
+		Load(&cfg)
 	if err != nil {
-		logger.Get().Fatal().Err(err).Msg("Cannot load conf")
+		err := configor.Load(&cfg, "conf.yaml")
+		if err != nil {
+			logger.Get().Fatal().Err(err).Msg("Cannot load conf from env or file.")
+		}
 	}
-	return &conf
+	return &cfg
 }
 
 func main() {
-	conf := loadConf()
+	cfg := loadConf()
 	r := gin.New()
 	r.Use(
 		requestid.New(),
@@ -45,13 +50,13 @@ func main() {
 		logger.WithContext(c.Request.Context()).Info().Bytes("body", body).Msg("request body")
 		c.JSON(204, gin.H{})
 	})
-	logger.Get().Printf("%#v\n", conf)
-	setCertMagic(conf)
-	err := certmagic.HTTPS([]string{conf.DomainName}, r.Handler())
+	logger.Get().Printf("%#v\n", cfg)
+	setCertMagic(cfg)
+	err := certmagic.HTTPS([]string{cfg.DomainName}, r.Handler())
 	logger.Get().Fatal().Err(err).Msg("server closed")
 }
 
-func setCertMagic(conf *Conf) {
+func setCertMagic(conf *Config) {
 	certmagic.HTTPSPort = conf.Port
 	certmagic.DefaultACME.Email = conf.Email
 	certmagic.DefaultACME.CA = certmagic.LetsEncryptStagingCA
