@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
+
 	"blackhole/pkg/logger"
 
-	"github.com/caddyserver/certmagic"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/configor"
@@ -51,14 +52,5 @@ func main() {
 		c.JSON(204, gin.H{})
 	})
 	logger.Get().Printf("%#v\n", cfg)
-	setCertMagic(cfg)
-	err := certmagic.HTTPS([]string{cfg.DomainName}, r.Handler())
-	logger.Get().Fatal().Err(err).Msg("server closed")
-}
-
-func setCertMagic(conf *Config) {
-	certmagic.HTTPSPort = conf.Port
-	certmagic.DefaultACME.Email = conf.Email
-	certmagic.DefaultACME.CA = certmagic.LetsEncryptStagingCA
-	certmagic.DefaultACME.Agreed = true
+	r.Run(fmt.Sprintf(":%d", cfg.Port))
 }
