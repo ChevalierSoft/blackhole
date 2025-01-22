@@ -35,8 +35,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/blackhole:latest
-            ${{ secrets.DOCKER_USERNAME }}/blackhole:${{ steps.tagName.outputs.tag }}
+            ${{ vars.DOCKER_USERNAME }}/blackhole:latest
+            ${{ vars.DOCKER_USERNAME }}/blackhole:${{ steps.tagName.outputs.tag }}
 
       - name: Log out from Docker Hub
         run: docker logout
