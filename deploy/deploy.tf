@@ -24,7 +24,7 @@ resource "scaleway_container" "blackhole" {
   name            = "blackhole-container"
   description     = "blackhole that record and log payloads"
   namespace_id    = scaleway_container_namespace.main.id
-  registry_image  = "chevaliersoft/blackhole:0.4"
+  registry_image  = "chevaliersoft/blackhole:latest"
   port            = var.bh_port
   http_option     = "redirected"
   cpu_limit       = 140
