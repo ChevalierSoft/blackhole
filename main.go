@@ -29,7 +29,22 @@ func main() {
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
-		logger.WithContext(c.Request.Context()).Info().Bytes("body", body).Msg("request body")
+
+		h := c.Request.Header.Clone()
+		if h.Get("Authorization") != "" {
+			h.Del("Authorization")
+			h.Set("Authorization", "***")
+		}
+
+		logger.WithContext(c.Request.Context()).
+			Info().
+			Bytes("body", body).
+			Str("method", c.Request.Method).
+			Str("path", c.Request.URL.Path).
+			Str("query", c.Request.URL.RawQuery).
+			Any("headers", h).
+			Msg("request body")
+
 		c.JSON(204, gin.H{})
 	})
 	logger.Get().Printf("%#v\n", cfg)
