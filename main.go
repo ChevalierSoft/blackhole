@@ -12,6 +12,7 @@ import (
 
 func main() {
 	cfg := loadConf()
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(
 		requestid.New(),
