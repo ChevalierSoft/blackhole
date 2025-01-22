@@ -10,24 +10,6 @@ import (
 	"github.com/jinzhu/configor"
 )
 
-type Config struct {
-	Port int `required:"true" env:"BH_PORT" yaml:"port" json:"port"`
-}
-
-func loadConf() *Config {
-	cfg := Config{}
-	err := configor.
-		New(&configor.Config{}).
-		Load(&cfg)
-	if err != nil {
-		err := configor.Load(&cfg, "conf.yaml")
-		if err != nil {
-			logger.Get().Fatal().Err(err).Msg("Cannot load conf from env or file.")
-		}
-	}
-	return &cfg
-}
-
 func main() {
 	cfg := loadConf()
 	r := gin.New()
@@ -51,4 +33,26 @@ func main() {
 	})
 	logger.Get().Printf("%#v\n", cfg)
 	r.Run(fmt.Sprintf(":%d", cfg.Port))
+}
+
+type Config struct {
+	Port int `required:"true" env:"BH_PORT" yaml:"port" json:"port"`
+}
+
+func (c *Config) Default() {
+	c.Port = 80
+}
+
+func loadConf() *Config {
+	cfg := Config{}
+	err := configor.
+		New(&configor.Config{}).
+		Load(&cfg)
+	if err != nil {
+		err := configor.Load(&cfg, "conf.yaml")
+		if err != nil {
+			cfg.Default()
+		}
+	}
+	return &cfg
 }
