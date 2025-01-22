@@ -10,59 +10,52 @@ terraform {
 provider "scaleway" {
   access_key = var.scaleway_access_key
   secret_key = var.scaleway_secret_key
-  project_id = var.project_id
   region     = var.region
-  zone       = var.zone
-}
-
-resource "scaleway_instance_ip" "public_ip" {
+  zone       = var.host_zone
   project_id = var.project_id
 }
 
-resource "scaleway_instance_volume" "data" {
-  project_id = var.project_id
-  size_in_gb = 20
-  type       = "l_ssd"
-  tags       = ["bh", "si"]
-  name       = "blackhole-volume"
-  zone       = var.zone
+resource "scaleway_container_namespace" "main" {
+  name        = "main"
+  description = "main container"
 }
 
-resource "scaleway_instance_security_group" "blackhole" {
-  project_id              = var.project_id
-  inbound_default_policy  = "drop"
-  outbound_default_policy = "accept"
+resource "scaleway_container" "blackhole" {
+  name            = "blackhole-container"
+  description     = "blackhole that record and log payloads"
+  namespace_id    = scaleway_container_namespace.main.id
+  registry_image  = "chevaliersoft/blackhole:0.4"
+  port            = var.bh_port
+  http_option     = "redirected"
+  cpu_limit       = 140
+  memory_limit    = 256
+  min_scale       = 0
+  max_scale       = 5
+  timeout         = 600
+  max_concurrency = 69
+  privacy         = "public"
+  protocol        = "http1"
+  deploy          = true
 
-  inbound_rule {
-    action   = "accept"
-    port     = "22"
-    ip_range = "0.0.0.0/0"
+  environment_variables = {
+    "BH_PORT"        = var.bh_port
+    "BH_EMAIL"       = var.bh_email
+    "BH_DOMAIN_NAME" = var.dns_zone
   }
-
-  inbound_rule {
-    action = "accept"
-    port   = "80"
-  }
-
-  inbound_rule {
-    action = "accept"
-    port   = "443"
+  secret_environment_variables = {
+    "deployment" = "terraform"
   }
 }
 
-resource "scaleway_instance_server" "blackhole" {
-  name       = "blackhole"
-  project_id = var.project_id
-  type       = "DEV1-S"
-  image      = "ubuntu_focal"
+resource "scaleway_domain_record" "blackhole" {
+  dns_zone = var.dns_zone
+  name     = "bh"
+  type     = "CNAME"
+  data     = "${scaleway_container.blackhole.domain_name}."
+  ttl      = 3600
+}
 
-  tags = ["bh", "blackhole", "si"]
-
-  ip_id = scaleway_instance_ip.public_ip.id
-
-  root_volume {
-    size_in_gb = 20
-  }
-
-  security_group_id = scaleway_instance_security_group.blackhole.id
+resource "scaleway_container_domain" "blackhole" {
+  container_id = scaleway_container.blackhole.id
+  hostname     = "${scaleway_domain_record.blackhole.name}.${scaleway_domain_record.blackhole.dns_zone}"
 }
