@@ -2,17 +2,15 @@ name: Build and push docker image to Docker Hub @ https://hub.docker.com/r/cheva
 
 on:
   push:
+    tags:
+      - "v*.*.*"
     branches:
       - 5_CD
-    # tags:
-    #   - "v*.*.*"
-    # branches:
-    #   - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: prod
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
