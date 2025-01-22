@@ -11,9 +11,7 @@ import (
 )
 
 type Config struct {
-	Port       int    `required:"true" env:"BH_PORT"        yaml:"port"        json:"port"`
-	DomainName string `required:"true" env:"BH_DOMAIN_NAME" yaml:"domain_name" json:"domain_name"`
-	Email      string `required:"true" env:"BH_EMAIL"       yaml:"email"       json:"email"`
+	Port int `required:"true" env:"BH_PORT" yaml:"port" json:"port"`
 }
 
 func loadConf() *Config {
