@@ -5,7 +5,7 @@ on:
     tags:
       - "v*.*.*"
     branches:
-      - 5_CD
+      - main
 
 jobs:
   build:
