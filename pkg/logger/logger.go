@@ -2,14 +2,12 @@ package logger
 
 import (
 	"context"
-	"io"
 	"os"
 	"time"
 
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
 type LoggerKey string
@@ -24,17 +22,12 @@ var (
 
 type Logger struct {
 	zerolog.Logger
-	logFile *os.File
 }
 
 func init() {
-	f, err := os.Create("blackhole.log")
-	if err != nil {
-		log.Fatal().Err(err).Msg("failed to create log file")
-	}
+
 	packageLogger = Logger{
-		Logger: zerolog.New(io.MultiWriter(
-			f,
+		Logger: zerolog.New(
 			zerolog.ConsoleWriter{
 				Out:        os.Stderr,
 				TimeFormat: time.RFC3339,
@@ -43,19 +36,14 @@ func init() {
 					"git_revision",
 					"go_version",
 				},
-			}),
+			},
 		).With().Timestamp().Logger(),
-		logFile: f,
 	}
 }
 
 func clone() *zerolog.Logger {
 	l := packageLogger.With().Logger()
 	return &l
-}
-
-func (l *Logger) Close() error {
-	return l.logFile.Close()
 }
 
 func GinRequestLogHandler() gin.HandlerFunc {

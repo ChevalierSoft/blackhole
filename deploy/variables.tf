@@ -20,7 +20,27 @@ variable "region" {
   description = "The region where resources will be created"
 }
 
-variable "zone" {
+variable "host_zone" {
   type        = string
   description = "The zone where resources will be created"
+}
+
+variable "bh_port" {
+  type        = number
+  description = "port used for the blackhole API"
+  default     = 80
+}
+
+variable "bh_email" {
+  type        = string
+  description = "email used by the refere"
+}
+
+variable "dns_zone" {
+  type        = string
+  description = "domain name used to access the API"
+}
+
+variable "organization_id" {
+  type = string
 }

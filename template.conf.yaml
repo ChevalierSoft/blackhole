@@ -1,6 +1,3 @@
 # template of conf.yaml to set the blackhole
-# env is usable too using to_upper on variable names
 
 port: 42024
-domain_name: "my_domain.oui"
-email: "my_email@it.oui"
