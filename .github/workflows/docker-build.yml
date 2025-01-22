@@ -2,8 +2,10 @@ name: Build and push docker image to Docker Hub @ https://hub.docker.com/r/cheva
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - 5_CD
+    # tags:
+    #   - "v*.*.*"
     # branches:
     #   - main
 
