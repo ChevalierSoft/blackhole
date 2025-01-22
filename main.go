@@ -45,11 +45,9 @@ func (c *Config) Default() {
 
 func loadConf() *Config {
 	cfg := Config{}
-	err := configor.
-		New(&configor.Config{}).
-		Load(&cfg)
+	err := configor.New(&configor.Config{}).Load(&cfg)
 	if err != nil {
-		err := configor.Load(&cfg, "conf.yaml")
+		err := configor.New(&configor.Config{Silent: true}).Load(&cfg, "conf.yaml")
 		if err != nil {
 			cfg.Default()
 		}
