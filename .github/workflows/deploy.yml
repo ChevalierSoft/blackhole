@@ -31,7 +31,7 @@ jobs:
             access-key=${{ secrets.SCW_ACCESS_KEY }} \
             secret-key=${{ secrets.SCW_SECRET_KEY }} \
             organization-id=${{ secrets.SCW_ORGANIZATION_ID }} \
-            project-id= ${{ secrets.SCW_DEFAULT_PROJECT_ID }} \
+            project-id=${{ secrets.SCW_DEFAULT_PROJECT_ID }} \
             send-telemetry=false \
             install-autocomplete=false
 
