@@ -25,19 +25,8 @@ type Logger struct {
 }
 
 func init() {
-
 	packageLogger = Logger{
-		Logger: zerolog.New(
-			zerolog.ConsoleWriter{
-				Out:        os.Stderr,
-				TimeFormat: time.RFC3339,
-				FieldsExclude: []string{
-					"user_agent",
-					"git_revision",
-					"go_version",
-				},
-			},
-		).With().Timestamp().Logger(),
+		Logger: zerolog.New(os.Stderr).With().Timestamp().Logger(),
 	}
 }
 
