@@ -23,7 +23,7 @@ jobs:
       - name: Install Scaleway CLI
         run: |
           apt update && apt install -y curl
-          curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/master/scripts/get.sh | sh
+          curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/refs/tags/v2.35.0/scripts/get.sh | sh
 
       - name: Configure Scaleway CLI
         run: |
