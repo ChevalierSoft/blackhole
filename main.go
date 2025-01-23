@@ -45,7 +45,16 @@ func main() {
 			Any("headers", h).
 			Msg("request body")
 
-		c.JSON(204, gin.H{})
+		switch c.Request.Method {
+		case "GET":
+			c.JSON(200, gin.H{"method": "GET"})
+		case "POST":
+			c.JSON(201, gin.H{"method": "POST"})
+		case "PUT":
+			c.JSON(200, gin.H{"method": "PUT"})
+		default:
+			c.JSON(204, gin.H{})
+		}
 	})
 	logger.Get().Printf("%#v\n", cfg)
 	r.Run(fmt.Sprintf(":%d", cfg.Port))
