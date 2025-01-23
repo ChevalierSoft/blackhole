@@ -38,9 +38,7 @@ resource "scaleway_container" "blackhole" {
   deploy          = true
 
   environment_variables = {
-    "BH_PORT"        = var.bh_port
-    "BH_EMAIL"       = var.bh_email
-    "BH_DOMAIN_NAME" = var.dns_zone
+    "BH_PORT" = var.bh_port
   }
   secret_environment_variables = {
     "deployment" = "terraform"

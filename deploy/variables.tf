@@ -18,22 +18,19 @@ variable "project_id" {
 variable "region" {
   type        = string
   description = "The region where resources will be created"
+  default     = "fr-par"
 }
 
 variable "host_zone" {
   type        = string
   description = "The zone where resources will be created"
+  default     = "fr-par-2"
 }
 
 variable "bh_port" {
   type        = number
   description = "port used for the blackhole API"
   default     = 80
-}
-
-variable "bh_email" {
-  type        = string
-  description = "email used by the refere"
 }
 
 variable "dns_zone" {
