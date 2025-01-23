@@ -47,3 +47,4 @@ jobs:
           TF_VAR_scaleway_secret_key: ${{ secrets.SCW_SECRET_KEY }}
           TF_VAR_project_id: ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
           TF_VAR_region: ${{ secrets.SCW_DEFAULT_REGION }}
+          TF_VAR_dns_zone: ${{ secrets.DNS_ZONE }}
