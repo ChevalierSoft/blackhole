@@ -26,16 +26,11 @@ jobs:
           curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/master/scripts/get.sh | sh
 
       - name: Configure Scaleway CLI
-        env:
-          SCW_ACCESS_KEY: ${{ secrets.SCW_ACCESS_KEY }}
-          SCW_SECRET_KEY: ${{ secrets.SCW_SECRET_KEY }}
-          SCW_DEFAULT_PROJECT_ID: ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
-          SCW_DEFAULT_REGION: ${{ secrets.SCW_DEFAULT_REGION }}
         run: |
-          scw config set access-key $SCW_ACCESS_KEY
-          scw config set secret-key $SCW_SECRET_KEY
-          scw config set default-project-id $SCW_DEFAULT_PROJECT_ID
-          scw config set default-region $SCW_DEFAULT_REGION
+          scw config set access-key ${{ secrets.SCW_ACCESS_KEY }}
+          scw config set secret-key ${{ secrets.SCW_SECRET_KEY }}
+          scw config set default-project-id ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
+          scw config set default-region ${{ secrets.SCW_DEFAULT_REGION }}
 
       - name: Initialize Terraform
         working-directory: ./deploy
