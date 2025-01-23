@@ -27,10 +27,13 @@ jobs:
 
       - name: Configure Scaleway CLI
         run: |
-          scw config set access-key ${{ secrets.SCW_ACCESS_KEY }}
-          scw config set secret-key ${{ secrets.SCW_SECRET_KEY }}
-          scw config set default-project-id ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
-          scw config set default-region ${{ secrets.SCW_DEFAULT_REGION }}
+          scw init -p newprofile \
+            access-key=${{ secrets.SCW_ACCESS_KEY }} \
+            secret-key=${{ secrets.SCW_SECRET_KEY }} \
+            organization-id=${{ secrets.SCW_ORGANIZATION_ID }} \
+            project-id= ${{ secrets.SCW_DEFAULT_PROJECT_ID }} \
+            send-telemetry=false \
+            install-autocomplete=false
 
       - name: Initialize Terraform
         working-directory: ./deploy
