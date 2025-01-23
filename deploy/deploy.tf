@@ -15,15 +15,18 @@ provider "scaleway" {
   project_id = var.project_id
 }
 
-resource "scaleway_container_namespace" "main" {
-  name        = "main"
-  description = "main container"
+resource "scaleway_container_namespace" "blackhole" {
+  name        = "blackhole"
+  description = "blackhole container"
+  lifecycle {
+    ignore_changes = [name, description]
+  }
 }
 
 resource "scaleway_container" "blackhole" {
   name            = "blackhole-container"
   description     = "blackhole that record and log payloads"
-  namespace_id    = scaleway_container_namespace.main.id
+  namespace_id    = scaleway_container_namespace.blackhole.id
   registry_image  = "chevaliersoft/blackhole:latest"
   port            = var.bh_port
   http_option     = "redirected"
