@@ -22,7 +22,8 @@ jobs:
 
       - name: Install Scaleway CLI
         run: |
-          curl -sL https://github.com/scaleway/scaleway-cli/releases/download/v2.3.0/scaleway-cli_2.49.0_linux_amd64.tar.gz | tar -xz -C /usr/local/bin
+          apt update && apt install -y curl
+          curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/master/scripts/get.sh | sh
 
       - name: Configure Scaleway CLI
         env:
