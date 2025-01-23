@@ -48,3 +48,4 @@ jobs:
           TF_VAR_project_id: ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
           TF_VAR_region: ${{ secrets.SCW_DEFAULT_REGION }}
           TF_VAR_dns_zone: ${{ secrets.DNS_ZONE }}
+          TF_VAR_organization_id: ${{ secrets.SCW_ORGANIZATION_ID }}
